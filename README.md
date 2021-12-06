@@ -40,7 +40,7 @@ discordLogger.Panic("key 1", "val 1", "key 2", "val 2",)
 ```
 
 **Note**: You have to pass **key** and **value** after another. In some cases if you didn't pass the **value** of a key the value will be an empty string.
-#### How to set color?
+#### How to set a custom color?
 If you want to set a custom color you can pass a key named ``color`` and the value must be a color number, like: ``99999`` which is blue
 ```go
 err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999")
@@ -49,3 +49,26 @@ if err != nil {
 	fmt.Println("Error: ", err)
 }
 ```
+#### How to set custom description?
+Simply as above code! you just need to pass ``description`` as key and pass the value:
+
+```go
+err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999", "description", "This is a description")
+
+if err != nil {
+	fmt.Println("Error: ", err)
+}
+```
+
+#### How to set custom content?
+need to pass ``content`` as key and pass the value:
+
+```go
+err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999", "description", "This is a description", "content", "this is a content")
+
+if err != nil {
+	fmt.Println("Error: ", err)
+}
+```
+
+Have fun!

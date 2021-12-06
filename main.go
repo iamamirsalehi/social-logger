@@ -15,7 +15,7 @@ func main() {
 		fmt.Println("Error: ", err)
 	}
 
-	err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "key 3", "val 3", "description", "Midoni chara?")
+	err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999", "description", "This is a description", "content", "this is a content")
 
 	if err != nil {
 		fmt.Println("Error: ", err)
