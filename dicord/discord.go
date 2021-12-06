@@ -22,8 +22,13 @@ type Discord interface {
 }
 
 const (
-	Info  = 99999
-	Debug = 465454
+	Info  = 3447003
+	Debug = 15105570
+	Warn  = 16776960
+	Error = 15158332
+	Fatal = 10181046
+	Trace = 9807270
+	Panic = 10038562
 )
 
 func NewSocialLogger(webhooks []string) (Discord, error) {
@@ -67,52 +72,92 @@ type Params struct {
 }
 
 func (s socialLogger) Info(keyVal ...string) error {
-	var wg sync.WaitGroup
+	err := sendMessage(&s, keyVal, Info)
 
-	for i := 0; i < len(s.webhooks); i++ {
-		wg.Add(1)
-
-		go func(i int, webhooks []string, keyVal []string) {
-			defer wg.Done()
-
-			_, _ = s.netClient.Post(webhooks[i], "application/json", prepareData(keyVal, Info))
-
-		}(i, s.webhooks, keyVal)
+	if err != nil {
+		return err
 	}
-
-	wg.Wait()
 
 	return nil
 }
 
 func (s socialLogger) Debug(keyVal ...string) error {
-	//TODO implement me
-	panic("implement me")
+	err := sendMessage(&s, keyVal, Debug)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s socialLogger) Warn(keyVal ...string) error {
-	//TODO implement me
-	panic("implement me")
+	err := sendMessage(&s, keyVal, Warn)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s socialLogger) Error(keyVal ...string) error {
-	//TODO implement me
-	panic("implement me")
+	err := sendMessage(&s, keyVal, Error)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s socialLogger) Fatal(keyVal ...string) error {
-	//TODO implement me
-	panic("implement me")
+	err := sendMessage(&s, keyVal, Fatal)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s socialLogger) Trace(keyVal ...string) error {
-	//TODO implement me
-	panic("implement me")
+	err := sendMessage(&s, keyVal, Trace)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s socialLogger) Panic(keyVal ...string) error {
-	//TODO implement me
-	panic("implement me")
+	err := sendMessage(&s, keyVal, Panic)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func sendMessage(s *socialLogger, data []string, color int) error {
+	var wg sync.WaitGroup
+
+	for i := 0; i < len(s.webhooks); i++ {
+		wg.Add(1)
+
+		go func(i int, webhooks []string, data []string) {
+			defer wg.Done()
+
+			_, _ = s.netClient.Post(webhooks[i], "application/json", prepareData(data, color))
+
+		}(i, s.webhooks, data)
+	}
+
+	wg.Wait()
+
+	return nil
 }
 
 func prepareData(keyVal []string, color int) *bytes.Buffer {
