@@ -34,19 +34,19 @@ Your message sent! :)
 The ``discordLogger`` variable contains all the methods you need to call to send your message to the discord channel. The following methods are:
 
 ```go
-discordLogger.Info("key 1", "val 1", "key 2", "val 2",)
+discordLogger.Info("key 1", "val 1", "key 2", "val 2")
 
-discordLogger.Debug("key 1", "val 1", "key 2", "val 2",) 
+discordLogger.Debug("key 1", "val 1", "key 2", "val 2") 
 
-discordLogger.Warn("key 1", "val 1", "key 2", "val 2",) 
+discordLogger.Warn("key 1", "val 1", "key 2", "val 2") 
 
-discordLogger.Error("key 1", "val 1", "key 2", "val 2",) 
+discordLogger.Error("key 1", "val 1", "key 2", "val 2") 
 
-discordLogger.Fatal("key 1", "val 1", "key 2", "val 2",) 
+discordLogger.Fatal("key 1", "val 1", "key 2", "val 2") 
 
-discordLogger.Trace("key 1", "val 1", "key 2", "val 2",) 
+discordLogger.Trace("key 1", "val 1", "key 2", "val 2") 
 
-discordLogger.Panic("key 1", "val 1", "key 2", "val 2",) 
+discordLogger.Panic("key 1", "val 1", "key 2", "val 2") 
 ```
 
 **Note**: You have to pass **key** and **value** after another. In some cases if you didn't pass the **value** of a key the value will be an empty string.
