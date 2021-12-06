@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/iamamirsalehi/social-logger/dicord"
+	"git.coryptex.com/sdk/discord-go/dicord"
 )
 
 func main() {

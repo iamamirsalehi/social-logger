@@ -1,4 +1,4 @@
-#introduction
+# introduction
 
 This package divided into three different packages witch includes **Telegram**, **Slack** and **Discord**. Let's begin with Discord
 
@@ -9,7 +9,7 @@ To use discord you need to initial it first, like:
 ```go
 import (
     "fmt"
-    "github.com/iamamirsalehi/social-logger/dicord"
+    "git.coryptex.com/sdk/discord-go/dicord"
 )
 
 discordLogger, err := dicord.NewSocialLogger([]string{
@@ -21,7 +21,7 @@ if err != nil {
     fmt.Println("Error: ", err)
 }
 ```
-The ``discordLogger`` variable contains all the methods you need to call and send your message to discord. The following methods are its
+The ``discordLogger`` variable contains all the methods you need to call to send your message to the discord channel. The following methods are:
 
 ```go
 discordLogger.Info("key 1", "val 1", "key 2", "val 2",)
@@ -39,11 +39,11 @@ discordLogger.Trace("key 1", "val 1", "key 2", "val 2",)
 discordLogger.Panic("key 1", "val 1", "key 2", "val 2",) 
 ```
 
-**Note**: you have to pass **key** and **value** after another. In some cases if you didn't pass the **value** of a key the value will be an empty string.
+**Note**: You have to pass **key** and **value** after another. In some cases if you didn't pass the **value** of a key the value will be an empty string.
 #### How to set color?
-
+If you want to set a custom color you can pass a key named ``color`` and the value must be a color number, like: ``99999`` which is blue
 ```go
-err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", )
+err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999")
 
 if err != nil {
 	fmt.Println("Error: ", err)
