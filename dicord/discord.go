@@ -6,19 +6,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 )
 
 type Discord interface {
-	Info(map[string]interface{}) error
-	/*	Debug(map[string]interface{}) error
-		Warn(map[string]interface{}) error
-		Error(map[string]interface{}) error
-		Fatal(map[string]interface{}) error
-		Trace(map[string]interface{}) error
-		Panic(map[string]interface{}) error*/
+	Info(keyVal ...string) error
+	Debug(keyVal ...string) error
+	Warn(keyVal ...string) error
+	Error(keyVal ...string) error
+	Fatal(keyVal ...string) error
+	Trace(keyVal ...string) error
+	Panic(keyVal ...string) error
 }
+
+const (
+	Info  = 99999
+	Debug = 465454
+)
 
 func NewSocialLogger(webhooks []string) (Discord, error) {
 	config := &tls.Config{
@@ -60,18 +66,18 @@ type Params struct {
 	Embeds  []*Embeds   `json:"embeds"`
 }
 
-func (s socialLogger) Info(m map[string]interface{}) error {
+func (s socialLogger) Info(keyVal ...string) error {
 	var wg sync.WaitGroup
 
 	for i := 0; i < len(s.webhooks); i++ {
 		wg.Add(1)
 
-		go func(i int, m map[string]interface{}, webhooks []string) {
+		go func(i int, webhooks []string, keyVal []string) {
 			defer wg.Done()
 
-			_, _ = s.netClient.Post(webhooks[i], "application/json", prepareData(m))
+			_, _ = s.netClient.Post(webhooks[i], "application/json", prepareData(keyVal, Info))
 
-		}(i, m, s.webhooks)
+		}(i, s.webhooks, keyVal)
 	}
 
 	wg.Wait()
@@ -79,26 +85,68 @@ func (s socialLogger) Info(m map[string]interface{}) error {
 	return nil
 }
 
-func prepareData(m map[string]interface{}) *bytes.Buffer {
+func (s socialLogger) Debug(keyVal ...string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s socialLogger) Warn(keyVal ...string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s socialLogger) Error(keyVal ...string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s socialLogger) Fatal(keyVal ...string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s socialLogger) Trace(keyVal ...string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s socialLogger) Panic(keyVal ...string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func prepareData(keyVal []string, color int) *bytes.Buffer {
 	var fields []*Fields
+	var content string
+	description := ""
+	keyValLen := len(keyVal)
+	key := 0
 
-	var content, color, description interface{}
+	for i := 0; i < keyValLen; i += 2 {
 
-	for name, value := range m {
-		switch strings.ToUpper(name) {
+		if keyValLen == i+1 {
+			break
+		}
+
+		if i%2 == 0 {
+			key = i
+		}
+
+		switch strings.ToUpper(keyVal[key]) {
 		case "DESCRIPTION":
-			description = value
+			description = keyVal[key+1]
 			continue
 		case "COLOR":
-			color = value
+			color, _ = strconv.Atoi(keyVal[key+1])
 			continue
 		case "CONTENT":
-			content = value
+			content = keyVal[key+1]
 			continue
 		}
+
 		fields = append(fields, &Fields{
-			Name:  name,
-			Value: value,
+			Name:  keyVal[key],
+			Value: keyVal[key+1],
 		})
 	}
 
@@ -106,7 +154,7 @@ func prepareData(m map[string]interface{}) *bytes.Buffer {
 
 	embeds = append(embeds, &Embeds{
 		Description: fmt.Sprintf("%v", description),
-		Color:       color.(int),
+		Color:       color,
 		Fields:      fields,
 	})
 
