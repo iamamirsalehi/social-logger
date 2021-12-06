@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
-	"errors"
-	"io/ioutil"
+	"fmt"
 	"net/http"
+	"strings"
+	"sync"
 )
 
 type Discord interface {
@@ -60,26 +61,20 @@ type Params struct {
 }
 
 func (s socialLogger) Info(m map[string]interface{}) error {
+	var wg sync.WaitGroup
 
-	responseBody := prepareData(m)
-	for _, webhook := range s.webhooks {
+	for i := 0; i < len(s.webhooks); i++ {
+		wg.Add(1)
 
-		resp, err := s.netClient.Post(webhook, "application/json", responseBody)
-		if err != nil {
-			return err
-		}
+		go func(i int, m map[string]interface{}, webhooks []string) {
+			defer wg.Done()
 
-		if resp.StatusCode != 200 {
-			defer resp.Body.Close()
+			_, _ = s.netClient.Post(webhooks[i], "application/json", prepareData(m))
 
-			responseBody, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				return err
-			}
-
-			return errors.New(string(responseBody))
-		}
+		}(i, m, s.webhooks)
 	}
+
+	wg.Wait()
 
 	return nil
 }
@@ -87,7 +82,20 @@ func (s socialLogger) Info(m map[string]interface{}) error {
 func prepareData(m map[string]interface{}) *bytes.Buffer {
 	var fields []*Fields
 
+	var content, color, description interface{}
+
 	for name, value := range m {
+		switch strings.ToUpper(name) {
+		case "DESCRIPTION":
+			description = value
+			continue
+		case "COLOR":
+			color = value
+			continue
+		case "CONTENT":
+			content = value
+			continue
+		}
 		fields = append(fields, &Fields{
 			Name:  name,
 			Value: value,
@@ -97,13 +105,13 @@ func prepareData(m map[string]interface{}) *bytes.Buffer {
 	var embeds []*Embeds
 
 	embeds = append(embeds, &Embeds{
-		Description: "I am a good boy",
-		Color:       16007990,
+		Description: fmt.Sprintf("%v", description),
+		Color:       color.(int),
 		Fields:      fields,
 	})
 
 	postBody, _ := json.Marshal(Params{
-		Content: "Mooz",
+		Content: content,
 		Embeds:  embeds,
 	})
 
