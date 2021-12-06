@@ -21,6 +21,16 @@ if err != nil {
     fmt.Println("Error: ", err)
 }
 ```
+### How to send message to discord?
+```go
+err := discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999")
+
+if err != nil {
+	fmt.Println("Error: ", err)
+}
+```
+Your message sent! :)
+
 The ``discordLogger`` variable contains all the methods you need to call to send your message to the discord channel. The following methods are:
 
 ```go
@@ -43,7 +53,7 @@ discordLogger.Panic("key 1", "val 1", "key 2", "val 2",)
 #### How to set a custom color?
 If you want to set a custom color you can pass a key named ``color`` and the value must be a color number, like: ``99999`` which is blue
 ```go
-err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999")
+err := discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999")
 
 if err != nil {
 	fmt.Println("Error: ", err)
@@ -53,7 +63,7 @@ if err != nil {
 Simply as above code! you just need to pass ``description`` as key and pass the value:
 
 ```go
-err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999", "description", "This is a description")
+err := discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999", "description", "This is a description")
 
 if err != nil {
 	fmt.Println("Error: ", err)
@@ -64,7 +74,7 @@ if err != nil {
 need to pass ``content`` as key and pass the value:
 
 ```go
-err = discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999", "description", "This is a description", "content", "this is a content")
+err := discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999", "description", "This is a description", "content", "this is a content")
 
 if err != nil {
 	fmt.Println("Error: ", err)
