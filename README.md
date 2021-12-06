@@ -1,6 +1,6 @@
 # introduction
 
-This package divided into three different packages witch includes **Telegram**, **Slack** and **Discord**. Let's begin with Discord
+This package divided into three different packages which includes **Telegram**, **Slack** and **Discord**. Let's begin with Discord
 
 ## Discord
 
