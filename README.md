@@ -23,7 +23,7 @@ if err != nil {
 ```
 ### How to send message to discord?
 ```go
-err := discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999")
+err := discordLogger.Info("key 1", "val 1")
 
 if err != nil {
 	fmt.Println("Error: ", err)
