@@ -12,9 +12,11 @@ import (
     "git.coryptex.com/sdk/discord-go/dicord"
 )
 
-discordLogger, err := dicord.NewDiscordLogger([]string{
-    "https://discord.com/api/webhooks/your_webhook",
-    "https://discord.com/api/webhooks/your_webhook",
+discordLogger, _ := dicord.NewDiscordLogger(&dicord.Config{
+    Webhooks: []string{
+        "https://discord.com/api/webhooks/917377910271250462/kSf3ej70YXjcwYcM08dBsUPfbBkqEwJ1nNbmHTyX3DbniLlmrzjY7us8W-QWhjqDEpg7",
+        },
+    Title: "Oauth server",
 })
 
 if err != nil {

@@ -31,7 +31,12 @@ const (
 	PanicColor = 10038562
 )
 
-func NewDiscordLogger(webhooks []string) (Discord, error) {
+type Config struct {
+	Webhooks []string
+	Title    string
+}
+
+func NewDiscordLogger(loggerConfig *Config) (Discord, error) {
 	config := &tls.Config{
 		InsecureSkipVerify: true,
 	}
@@ -45,14 +50,16 @@ func NewDiscordLogger(webhooks []string) (Discord, error) {
 	}
 
 	return &discordLogger{
-		webhooks:  webhooks,
+		webhooks:  loggerConfig.Webhooks,
 		netClient: netClient,
+		title:     loggerConfig.Title,
 	}, nil
 }
 
 type discordLogger struct {
 	webhooks  []string
 	netClient *http.Client
+	title     string
 }
 
 type Fields struct {
@@ -150,7 +157,7 @@ func sendMessage(s *discordLogger, data []interface{}, color int) error {
 		go func(i int, webhooks []string, data []interface{}) {
 			defer wg.Done()
 
-			_, _ = s.netClient.Post(webhooks[i], "application/json", prepareData(data, color))
+			_, _ = s.netClient.Post(webhooks[i], "application/json", prepareData(data, s.title, color))
 
 		}(i, s.webhooks, data)
 	}
@@ -160,10 +167,9 @@ func sendMessage(s *discordLogger, data []interface{}, color int) error {
 	return nil
 }
 
-func prepareData(keyVal []interface{}, color int) *bytes.Buffer {
+func prepareData(keyVal []interface{}, title string, color int) *bytes.Buffer {
 
 	var fields []*Fields
-	var content string
 	var value interface{}
 	description := ""
 	keyValLen := len(keyVal)
@@ -196,9 +202,6 @@ func prepareData(keyVal []interface{}, color int) *bytes.Buffer {
 		case "COLOR":
 			color, _ = strconv.Atoi(keyVal[key+1].(string))
 			continue
-		case "CONTENT":
-			content = fmt.Sprintf("%s", keyVal[key+1])
-			continue
 		}
 
 		fields = append(fields, &Fields{
@@ -217,7 +220,7 @@ func prepareData(keyVal []interface{}, color int) *bytes.Buffer {
 	})
 
 	postBody, _ := json.Marshal(Params{
-		Content: fmt.Sprintf("%s", content),
+		Content: title,
 		Embeds:  embeds,
 	})
 
