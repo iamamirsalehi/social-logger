@@ -13,8 +13,8 @@ import (
 )
 
 discordLogger, err := dicord.NewSocialLogger([]string{
-    "https://discord.com/api/webhooks/917325600807592017/ROcL7e9Hp98M9nIZ-byGZoSNyKQ6kTmCViF5GC8re4Xej_k7GdGu9EJ3CREE4GnIsyTQ",
-    "https://discord.com/api/webhooks/917377910271250462/kSf3ej70YXjcwYcM08dBsUPfbBkqEwJ1nNbmHTyX3DbniLlmrzjY7us8W-QWhjqDEpg7",
+    "https://discord.com/api/webhooks/your_webhook",
+    "https://discord.com/api/webhooks/your_webhook",
 })
 
 if err != nil {
