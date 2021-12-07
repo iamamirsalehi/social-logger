@@ -72,15 +72,4 @@ if err != nil {
 }
 ```
 
-#### How to set custom content?
-need to pass ``content`` as key and pass the value:
-
-```go
-err := discordLogger.Info("key 1", "val 1", "key 2", "val 2", "color", "99999", "description", "This is a description", "content", "this is a content")
-
-if err != nil {
-	fmt.Println("Error: ", err)
-}
-```
-
 Have fun!
