@@ -22,16 +22,16 @@ type Discord interface {
 }
 
 const (
-	Info  = 3447003
-	Debug = 15105570
-	Warn  = 16776960
-	Error = 15158332
-	Fatal = 10181046
-	Trace = 9807270
-	Panic = 10038562
+	InfoColor  = 3447003
+	DebugColor = 15105570
+	WarnColor  = 16776960
+	ErrorColor = 15158332
+	FatalColor = 10181046
+	TraceColor = 9807270
+	PanicColor = 10038562
 )
 
-func NewSocialLogger(webhooks []string) (Discord, error) {
+func NewDiscordLogger(webhooks []string) (Discord, error) {
 	config := &tls.Config{
 		InsecureSkipVerify: true,
 	}
@@ -72,7 +72,7 @@ type Params struct {
 }
 
 func (s socialLogger) Info(keyVal ...string) error {
-	err := sendMessage(&s, keyVal, Info)
+	err := sendMessage(&s, keyVal, InfoColor)
 
 	if err != nil {
 		return err
@@ -82,7 +82,7 @@ func (s socialLogger) Info(keyVal ...string) error {
 }
 
 func (s socialLogger) Debug(keyVal ...string) error {
-	err := sendMessage(&s, keyVal, Debug)
+	err := sendMessage(&s, keyVal, DebugColor)
 
 	if err != nil {
 		return err
@@ -92,7 +92,7 @@ func (s socialLogger) Debug(keyVal ...string) error {
 }
 
 func (s socialLogger) Warn(keyVal ...string) error {
-	err := sendMessage(&s, keyVal, Warn)
+	err := sendMessage(&s, keyVal, WarnColor)
 
 	if err != nil {
 		return err
@@ -102,7 +102,7 @@ func (s socialLogger) Warn(keyVal ...string) error {
 }
 
 func (s socialLogger) Error(keyVal ...string) error {
-	err := sendMessage(&s, keyVal, Error)
+	err := sendMessage(&s, keyVal, ErrorColor)
 
 	if err != nil {
 		return err
@@ -112,7 +112,7 @@ func (s socialLogger) Error(keyVal ...string) error {
 }
 
 func (s socialLogger) Fatal(keyVal ...string) error {
-	err := sendMessage(&s, keyVal, Fatal)
+	err := sendMessage(&s, keyVal, FatalColor)
 
 	if err != nil {
 		return err
@@ -122,7 +122,7 @@ func (s socialLogger) Fatal(keyVal ...string) error {
 }
 
 func (s socialLogger) Trace(keyVal ...string) error {
-	err := sendMessage(&s, keyVal, Trace)
+	err := sendMessage(&s, keyVal, TraceColor)
 
 	if err != nil {
 		return err
@@ -132,7 +132,7 @@ func (s socialLogger) Trace(keyVal ...string) error {
 }
 
 func (s socialLogger) Panic(keyVal ...string) error {
-	err := sendMessage(&s, keyVal, Panic)
+	err := sendMessage(&s, keyVal, PanicColor)
 
 	if err != nil {
 		return err
