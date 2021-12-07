@@ -14,7 +14,7 @@ import (
 
 discordLogger, _ := dicord.NewDiscordLogger(&dicord.Config{
     Webhooks: []string{
-        "https://discord.com/api/webhooks/917377910271250462/kSf3ej70YXjcwYcM08dBsUPfbBkqEwJ1nNbmHTyX3DbniLlmrzjY7us8W-QWhjqDEpg7",
+        "https://discord.com/api/webhooks/you_webhook",
         },
     Title: "Oauth server",
 })
