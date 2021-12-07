@@ -12,7 +12,7 @@ import (
     "git.coryptex.com/sdk/discord-go/dicord"
 )
 
-discordLogger, err := dicord.NewSocialLogger([]string{
+discordLogger, err := dicord.NewDiscordLogger([]string{
     "https://discord.com/api/webhooks/your_webhook",
     "https://discord.com/api/webhooks/your_webhook",
 })
