@@ -9,5 +9,3 @@ type Slack interface {
 	Trace(keyVal ...string) error
 	Panic(keyVal ...string) error
 }
-
-//func New

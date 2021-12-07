@@ -12,13 +12,13 @@ import (
 )
 
 type Discord interface {
-	Info(keyVal ...string) error
-	Debug(keyVal ...string) error
-	Warn(keyVal ...string) error
-	Error(keyVal ...string) error
-	Fatal(keyVal ...string) error
-	Trace(keyVal ...string) error
-	Panic(keyVal ...string) error
+	Info(keyVal ...interface{}) error
+	Debug(keyVal ...interface{}) error
+	Warn(keyVal ...interface{}) error
+	Error(keyVal ...interface{}) error
+	Fatal(keyVal ...interface{}) error
+	Trace(keyVal ...interface{}) error
+	Panic(keyVal ...interface{}) error
 }
 
 const (
@@ -56,7 +56,7 @@ type discordLogger struct {
 }
 
 type Fields struct {
-	Name  string      `json:"name,omitempty"`
+	Name  interface{} `json:"name,omitempty"`
 	Value interface{} `json:"value,omitempty"`
 }
 
@@ -71,7 +71,7 @@ type Params struct {
 	Embeds  []*Embeds   `json:"embeds"`
 }
 
-func (s discordLogger) Info(keyVal ...string) error {
+func (s discordLogger) Info(keyVal ...interface{}) error {
 	err := sendMessage(&s, keyVal, InfoColor)
 
 	if err != nil {
@@ -81,7 +81,7 @@ func (s discordLogger) Info(keyVal ...string) error {
 	return nil
 }
 
-func (s discordLogger) Debug(keyVal ...string) error {
+func (s discordLogger) Debug(keyVal ...interface{}) error {
 	err := sendMessage(&s, keyVal, DebugColor)
 
 	if err != nil {
@@ -91,7 +91,7 @@ func (s discordLogger) Debug(keyVal ...string) error {
 	return nil
 }
 
-func (s discordLogger) Warn(keyVal ...string) error {
+func (s discordLogger) Warn(keyVal ...interface{}) error {
 	err := sendMessage(&s, keyVal, WarnColor)
 
 	if err != nil {
@@ -101,7 +101,7 @@ func (s discordLogger) Warn(keyVal ...string) error {
 	return nil
 }
 
-func (s discordLogger) Error(keyVal ...string) error {
+func (s discordLogger) Error(keyVal ...interface{}) error {
 	err := sendMessage(&s, keyVal, ErrorColor)
 
 	if err != nil {
@@ -111,7 +111,7 @@ func (s discordLogger) Error(keyVal ...string) error {
 	return nil
 }
 
-func (s discordLogger) Fatal(keyVal ...string) error {
+func (s discordLogger) Fatal(keyVal ...interface{}) error {
 	err := sendMessage(&s, keyVal, FatalColor)
 
 	if err != nil {
@@ -121,7 +121,7 @@ func (s discordLogger) Fatal(keyVal ...string) error {
 	return nil
 }
 
-func (s discordLogger) Trace(keyVal ...string) error {
+func (s discordLogger) Trace(keyVal ...interface{}) error {
 	err := sendMessage(&s, keyVal, TraceColor)
 
 	if err != nil {
@@ -131,7 +131,7 @@ func (s discordLogger) Trace(keyVal ...string) error {
 	return nil
 }
 
-func (s discordLogger) Panic(keyVal ...string) error {
+func (s discordLogger) Panic(keyVal ...interface{}) error {
 	err := sendMessage(&s, keyVal, PanicColor)
 
 	if err != nil {
@@ -141,13 +141,13 @@ func (s discordLogger) Panic(keyVal ...string) error {
 	return nil
 }
 
-func sendMessage(s *discordLogger, data []string, color int) error {
+func sendMessage(s *discordLogger, data []interface{}, color int) error {
 	var wg sync.WaitGroup
 
 	for i := 0; i < len(s.webhooks); i++ {
 		wg.Add(1)
 
-		go func(i int, webhooks []string, data []string) {
+		go func(i int, webhooks []string, data []interface{}) {
 			defer wg.Done()
 
 			_, _ = s.netClient.Post(webhooks[i], "application/json", prepareData(data, color))
@@ -160,7 +160,8 @@ func sendMessage(s *discordLogger, data []string, color int) error {
 	return nil
 }
 
-func prepareData(keyVal []string, color int) *bytes.Buffer {
+func prepareData(keyVal []interface{}, color int) *bytes.Buffer {
+
 	var fields []*Fields
 	var content string
 	description := ""
@@ -168,31 +169,36 @@ func prepareData(keyVal []string, color int) *bytes.Buffer {
 	key := 0
 
 	for i := 0; i < keyValLen; i += 2 {
-
-		if keyValLen == i+1 {
-			break
-		}
-
 		if i%2 == 0 {
 			key = i
 		}
 
-		switch strings.ToUpper(keyVal[key]) {
+		if keyValLen == i+1 {
+			fields = append(fields, &Fields{
+				Name:  keyVal[key].(string),
+				Value: "-",
+			})
+
+			break
+		}
+
+		switch strings.ToUpper(keyVal[key].(string)) {
 		case "DESCRIPTION":
-			description = keyVal[key+1]
+			description = keyVal[key+1].(string)
 			continue
 		case "COLOR":
-			color, _ = strconv.Atoi(keyVal[key+1])
+			color, _ = strconv.Atoi(keyVal[key+1].(string))
 			continue
 		case "CONTENT":
-			content = keyVal[key+1]
+			content = keyVal[key+1].(string)
 			continue
 		}
 
 		fields = append(fields, &Fields{
-			Name:  keyVal[key],
-			Value: keyVal[key+1],
+			Name:  fmt.Sprintf("%s", keyVal[key].(string)),
+			Value: fmt.Sprintf("%s", keyVal[key+1]),
 		})
+
 	}
 
 	var embeds []*Embeds
@@ -204,7 +210,7 @@ func prepareData(keyVal []string, color int) *bytes.Buffer {
 	})
 
 	postBody, _ := json.Marshal(Params{
-		Content: content,
+		Content: fmt.Sprintf("%s", content),
 		Embeds:  embeds,
 	})
 
