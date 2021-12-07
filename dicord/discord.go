@@ -164,6 +164,7 @@ func prepareData(keyVal []interface{}, color int) *bytes.Buffer {
 
 	var fields []*Fields
 	var content string
+	var value interface{}
 	description := ""
 	keyValLen := len(keyVal)
 	key := 0
@@ -173,30 +174,36 @@ func prepareData(keyVal []interface{}, color int) *bytes.Buffer {
 			key = i
 		}
 
+		if fmt.Sprintf("%s", keyVal[key+1]) == "" {
+			value = "-"
+		} else {
+			value = fmt.Sprintf("%s", keyVal[key+1])
+		}
+
 		if keyValLen == i+1 {
 			fields = append(fields, &Fields{
-				Name:  keyVal[key].(string),
+				Name:  fmt.Sprintf("%s", keyVal[key]),
 				Value: "-",
 			})
 
 			break
 		}
 
-		switch strings.ToUpper(keyVal[key].(string)) {
+		switch strings.ToUpper(fmt.Sprintf("%s", keyVal[key])) {
 		case "DESCRIPTION":
-			description = keyVal[key+1].(string)
+			description = fmt.Sprintf("%s", keyVal[key+1])
 			continue
 		case "COLOR":
 			color, _ = strconv.Atoi(keyVal[key+1].(string))
 			continue
 		case "CONTENT":
-			content = keyVal[key+1].(string)
+			content = fmt.Sprintf("%s", keyVal[key+1])
 			continue
 		}
 
 		fields = append(fields, &Fields{
-			Name:  fmt.Sprintf("%s", keyVal[key].(string)),
-			Value: fmt.Sprintf("%s", keyVal[key+1]),
+			Name:  fmt.Sprintf("%s", keyVal[key]),
+			Value: value,
 		})
 
 	}
