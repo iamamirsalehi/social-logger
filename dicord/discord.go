@@ -44,13 +44,13 @@ func NewDiscordLogger(webhooks []string) (Discord, error) {
 		Transport: transport,
 	}
 
-	return &socialLogger{
+	return &discordLogger{
 		webhooks:  webhooks,
 		netClient: netClient,
 	}, nil
 }
 
-type socialLogger struct {
+type discordLogger struct {
 	webhooks  []string
 	netClient *http.Client
 }
@@ -71,7 +71,7 @@ type Params struct {
 	Embeds  []*Embeds   `json:"embeds"`
 }
 
-func (s socialLogger) Info(keyVal ...string) error {
+func (s discordLogger) Info(keyVal ...string) error {
 	err := sendMessage(&s, keyVal, InfoColor)
 
 	if err != nil {
@@ -81,7 +81,7 @@ func (s socialLogger) Info(keyVal ...string) error {
 	return nil
 }
 
-func (s socialLogger) Debug(keyVal ...string) error {
+func (s discordLogger) Debug(keyVal ...string) error {
 	err := sendMessage(&s, keyVal, DebugColor)
 
 	if err != nil {
@@ -91,7 +91,7 @@ func (s socialLogger) Debug(keyVal ...string) error {
 	return nil
 }
 
-func (s socialLogger) Warn(keyVal ...string) error {
+func (s discordLogger) Warn(keyVal ...string) error {
 	err := sendMessage(&s, keyVal, WarnColor)
 
 	if err != nil {
@@ -101,7 +101,7 @@ func (s socialLogger) Warn(keyVal ...string) error {
 	return nil
 }
 
-func (s socialLogger) Error(keyVal ...string) error {
+func (s discordLogger) Error(keyVal ...string) error {
 	err := sendMessage(&s, keyVal, ErrorColor)
 
 	if err != nil {
@@ -111,7 +111,7 @@ func (s socialLogger) Error(keyVal ...string) error {
 	return nil
 }
 
-func (s socialLogger) Fatal(keyVal ...string) error {
+func (s discordLogger) Fatal(keyVal ...string) error {
 	err := sendMessage(&s, keyVal, FatalColor)
 
 	if err != nil {
@@ -121,7 +121,7 @@ func (s socialLogger) Fatal(keyVal ...string) error {
 	return nil
 }
 
-func (s socialLogger) Trace(keyVal ...string) error {
+func (s discordLogger) Trace(keyVal ...string) error {
 	err := sendMessage(&s, keyVal, TraceColor)
 
 	if err != nil {
@@ -131,7 +131,7 @@ func (s socialLogger) Trace(keyVal ...string) error {
 	return nil
 }
 
-func (s socialLogger) Panic(keyVal ...string) error {
+func (s discordLogger) Panic(keyVal ...string) error {
 	err := sendMessage(&s, keyVal, PanicColor)
 
 	if err != nil {
@@ -141,7 +141,7 @@ func (s socialLogger) Panic(keyVal ...string) error {
 	return nil
 }
 
-func sendMessage(s *socialLogger, data []string, color int) error {
+func sendMessage(s *discordLogger, data []string, color int) error {
 	var wg sync.WaitGroup
 
 	for i := 0; i < len(s.webhooks); i++ {
